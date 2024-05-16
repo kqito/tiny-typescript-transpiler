@@ -45,3 +45,6 @@ The following are some of the syntax that we plan to support in the future:
 - [ ] InterfaceDeclaration: Interface definitions
 - [ ] EnumDeclaration: Enum definitions
 - [ ] ModuleDeclaration: Module definitions
+
+## License
+[MIT © kqito](./LICENSE)
