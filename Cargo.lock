@@ -78,15 +78,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cli"
-version = "0.1.0"
-dependencies = [
- "clap",
- "thiserror",
- "transpiler",
-]
-
-[[package]]
 name = "diff"
 version = "0.1.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -287,6 +278,15 @@ dependencies = [
  "pretty_assertions",
  "regex",
  "thiserror",
+]
+
+[[package]]
+name = "ttt"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "thiserror",
+ "transpiler",
 ]
 
 [[package]]
