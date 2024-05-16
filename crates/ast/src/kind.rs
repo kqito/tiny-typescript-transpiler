@@ -1,0 +1,116 @@
+use crate::char::CharacterCodes;
+
+// TODO: impl Error derive for outputing error messagae
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum SyntaxKind {
+    Identifier,
+    NumericLiteral,
+    StringLiteral,
+    ExpressionStatement,
+    CallExpression,
+    VariableStatement,
+    VariableDeclaration,
+    VariableDeclarationList,
+    TypeReference,
+    TypeAliasDeclaration,
+    FunctionDeclaration,
+    Block,
+    Parameter,
+    VarKeyword,
+    ConstKeyword,
+    LetKeyword,
+    TypeKeyword,
+    NumberKeyword,
+    StringKeyword,
+    FunctionKeyword,
+    ReturnKeyword,
+    AmpersandToken,
+    AsteriskToken,
+    AtToken,
+    BackslashToken,
+    BacktickToken,
+    BarToken,
+    CaretToken,
+    CloseBraceToken,
+    CloseBracketToken,
+    CloseParenToken,
+    ColonToken,
+    CommaToken,
+    DotToken,
+    DoubleQuoteToken,
+    EqualsToken,
+    ExclamationToken,
+    GreaterThanToken,
+    HashToken,
+    LessThanToken,
+    MinusToken,
+    OpenBraceToken,
+    OpenBracketToken,
+    OpenParenToken,
+    PercentToken,
+    PlusToken,
+    QuestionToken,
+    SemicolonToken,
+    SingleQuoteToken,
+    SlashToken,
+    TildeToken,
+    Unknown,
+    BOF,
+    EOF,
+}
+
+impl TryFrom<CharacterCodes> for SyntaxKind {
+    type Error = &'static str;
+    fn try_from(char: CharacterCodes) -> Result<Self, Self::Error> {
+        match char {
+            CharacterCodes::Ampersand => Ok(SyntaxKind::AmpersandToken),
+            CharacterCodes::Asterisk => Ok(SyntaxKind::AsteriskToken),
+            CharacterCodes::At => Ok(SyntaxKind::AtToken),
+            CharacterCodes::Backslash => Ok(SyntaxKind::BackslashToken),
+            CharacterCodes::Backtick => Ok(SyntaxKind::BacktickToken),
+            CharacterCodes::Bar => Ok(SyntaxKind::BarToken),
+            CharacterCodes::Caret => Ok(SyntaxKind::CaretToken),
+            CharacterCodes::CloseBrace => Ok(SyntaxKind::CloseBraceToken),
+            CharacterCodes::CloseBracket => Ok(SyntaxKind::CloseBracketToken),
+            CharacterCodes::CloseParen => Ok(SyntaxKind::CloseParenToken),
+            CharacterCodes::Colon => Ok(SyntaxKind::ColonToken),
+            CharacterCodes::Comma => Ok(SyntaxKind::CommaToken),
+            CharacterCodes::Dot => Ok(SyntaxKind::DotToken),
+            CharacterCodes::DoubleQuote => Ok(SyntaxKind::DoubleQuoteToken),
+            CharacterCodes::Equals => Ok(SyntaxKind::EqualsToken),
+            CharacterCodes::Exclamation => Ok(SyntaxKind::ExclamationToken),
+            CharacterCodes::GreaterThan => Ok(SyntaxKind::GreaterThanToken),
+            CharacterCodes::Hash => Ok(SyntaxKind::HashToken),
+            CharacterCodes::LessThan => Ok(SyntaxKind::LessThanToken),
+            CharacterCodes::Minus => Ok(SyntaxKind::MinusToken),
+            CharacterCodes::OpenBrace => Ok(SyntaxKind::OpenBraceToken),
+            CharacterCodes::OpenBracket => Ok(SyntaxKind::OpenBracketToken),
+            CharacterCodes::OpenParen => Ok(SyntaxKind::OpenParenToken),
+            CharacterCodes::Percent => Ok(SyntaxKind::PercentToken),
+            CharacterCodes::Plus => Ok(SyntaxKind::PlusToken),
+            CharacterCodes::Question => Ok(SyntaxKind::QuestionToken),
+            CharacterCodes::Semicolon => Ok(SyntaxKind::SemicolonToken),
+            CharacterCodes::SingleQuote => Ok(SyntaxKind::SingleQuoteToken),
+            CharacterCodes::Slash => Ok(SyntaxKind::SlashToken),
+            CharacterCodes::Tilde => Ok(SyntaxKind::TildeToken),
+            _ => Err("Unknown char specified"),
+        }
+    }
+}
+
+impl TryFrom<&str> for SyntaxKind {
+    type Error = &'static str;
+    fn try_from(keyword: &str) -> Result<Self, Self::Error> {
+        match keyword {
+            "function" => Ok(SyntaxKind::FunctionKeyword),
+            "var" => Ok(SyntaxKind::VarKeyword),
+            "const" => Ok(SyntaxKind::ConstKeyword),
+            "let" => Ok(SyntaxKind::LetKeyword),
+            "number" => Ok(SyntaxKind::NumberKeyword),
+            "string" => Ok(SyntaxKind::StringKeyword),
+            "type" => Ok(SyntaxKind::TypeKeyword),
+            "return" => Ok(SyntaxKind::ReturnKeyword),
+            _ => Err("Unknown keyword specified"),
+        }
+    }
+}
