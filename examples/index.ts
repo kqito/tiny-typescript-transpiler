@@ -1,6 +1,6 @@
-ver numTest = 100;
-  n
-var numTest = 100;
+var numTest1 = 100;
+let numTest2 = 100;
 
 type Str = String;
-ver str: Str = "hogehoge";
+const str: Str = "hogehoge";
+const numTest3 = numTest2;

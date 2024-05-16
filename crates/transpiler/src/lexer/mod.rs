@@ -20,7 +20,7 @@ pub trait Controller<'a, T> {
     fn find<F>(&mut self, pred: F) -> Option<T>
     where
         F: FnMut(&T) -> bool;
-    fn pop_all(&mut self) -> Vec<T>;
+    fn peek_all(&mut self) -> Vec<T>;
 }
 
 type Lexes<'a> = Vec<Lex<'a>>;
@@ -116,7 +116,8 @@ impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
         target
     }
 
-    fn pop_all(&mut self) -> Lexes<'a> {
+    fn peek_all(&mut self) -> Lexes<'a> {
+        let reset_pos = self.input.current_pos();
         let mut lexes = Vec::new();
         loop {
             let lex = self.pop();
@@ -127,6 +128,7 @@ impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
             lexes.push(lex);
         }
 
+        self.input.reset_to(reset_pos);
         lexes
     }
 }

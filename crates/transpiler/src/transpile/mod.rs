@@ -30,13 +30,13 @@ pub fn transpile_file(context: TranspileContext) -> Result<TranspileResult, Tran
 
     let debugger = move |any: &dyn Debug| {
         if options.debug {
-            println!("{:#?}", any);
+            println!("{:#?}\n", any);
         }
     };
 
     let mut inputer = Inputer::from(&source_file.src as &str);
     let mut lexer = Lexer::from(&mut inputer);
-    debugger(&lexer.pop_all());
+    debugger(&lexer.peek_all());
 
     let mut parse = Parser::new(lexer);
     let modules = match parse.parse_module() {

@@ -11,7 +11,7 @@ mod utils {
     pub fn assert_lexes<'a>(content: &'a str, expected: Vec<Lex<'a>>) {
         let mut inputer = Inputer::from(content);
         let mut lexer = Lexer::from(&mut inputer);
-        let lexes = lexer.pop_all();
+        let lexes = lexer.peek_all();
 
         assert_eq!(lexes, expected);
     }
