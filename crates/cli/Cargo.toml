@@ -3,6 +3,20 @@ name = "ttt"
 version = "0.1.0"
 edition = "2021"
 
+authors = ["kqito"]
+description = "Tiny-Typescript-Transpiler is a simple learning library for transpilers like swc, excluding binder and checker"
+repository = "https://github.com/kqito/tiny-typescript-transpiler"
+license = "MIT"
+readme = "README.md"
+
+# お好みで
+categories = ["compilers"]
+keywords = ["typescript", "transpiler", "compiler", "learning"]
+
+[badges]
+github = { repository = "kqito/tiny-typescript-transpiler", workflow = "Rust" }
+
+
 [dependencies]
 clap = { version = "3.0.0-beta.2", features = ["derive"] }
 transpiler = { path = "../transpiler" }
