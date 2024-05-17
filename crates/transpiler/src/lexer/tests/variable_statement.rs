@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod variable_statement {
-    use crate::lexer::{tests::utils::assert_lexes, Lex};
+    use crate::lexer::tests::utils::{assert_lexes, LexCreateHelper as helper};
     use ast::kind::SyntaxKind;
 
     #[test]
@@ -8,36 +8,11 @@ mod variable_statement {
         assert_lexes(
             "var a = 100;",
             vec![
-                Lex {
-                    pos: 0,
-                    end: 3,
-                    kind: SyntaxKind::VarKeyword,
-                    text: "var",
-                },
-                Lex {
-                    pos: 3,
-                    end: 5,
-                    kind: SyntaxKind::Identifier,
-                    text: "a",
-                },
-                Lex {
-                    pos: 5,
-                    end: 7,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 7,
-                    end: 11,
-                    kind: SyntaxKind::NumericLiteral,
-                    text: "100",
-                },
-                Lex {
-                    pos: 11,
-                    end: 12,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 11), SyntaxKind::NumericLiteral, "100"),
+                helper::create_lex((11, 12), SyntaxKind::SemicolonToken, ""),
             ],
         );
     }
@@ -47,285 +22,80 @@ mod variable_statement {
         assert_lexes(
             r#"var a = "hogehoge";"#,
             vec![
-                Lex {
-                    pos: 0,
-                    end: 3,
-                    kind: SyntaxKind::VarKeyword,
-                    text: "var",
-                },
-                Lex {
-                    pos: 3,
-                    end: 5,
-                    kind: SyntaxKind::Identifier,
-                    text: "a",
-                },
-                Lex {
-                    pos: 5,
-                    end: 7,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 7,
-                    end: 18,
-                    kind: SyntaxKind::StringLiteral,
-                    text: "hogehoge",
-                },
-                Lex {
-                    pos: 18,
-                    end: 19,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 18), SyntaxKind::StringLiteral, "hogehoge"),
+                helper::create_lex((18, 19), SyntaxKind::SemicolonToken, ""),
             ],
         );
 
         assert_lexes(
             "const b: string = 'piyo';",
             vec![
-                Lex {
-                    pos: 0,
-                    end: 5,
-                    kind: SyntaxKind::ConstKeyword,
-                    text: "const",
-                },
-                Lex {
-                    pos: 5,
-                    end: 7,
-                    kind: SyntaxKind::Identifier,
-                    text: "b",
-                },
-                Lex {
-                    pos: 7,
-                    end: 8,
-                    kind: SyntaxKind::ColonToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 8,
-                    end: 15,
-                    kind: SyntaxKind::StringKeyword,
-                    text: "string",
-                },
-                Lex {
-                    pos: 15,
-                    end: 17,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 17,
-                    end: 24,
-                    kind: SyntaxKind::StringLiteral,
-                    text: "piyo",
-                },
-                Lex {
-                    pos: 24,
-                    end: 25,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 5), SyntaxKind::ConstKeyword, "const"),
+                helper::create_lex((5, 7), SyntaxKind::Identifier, "b"),
+                helper::create_lex((7, 8), SyntaxKind::ColonToken, ""),
+                helper::create_lex((8, 15), SyntaxKind::StringKeyword, "string"),
+                helper::create_lex((15, 17), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((17, 24), SyntaxKind::StringLiteral, "piyo"),
+                helper::create_lex((24, 25), SyntaxKind::SemicolonToken, ""),
             ],
         );
 
         assert_lexes(
             r#"let hoge: string;"#,
             vec![
-                Lex {
-                    pos: 0,
-                    end: 3,
-                    kind: SyntaxKind::LetKeyword,
-                    text: "let",
-                },
-                Lex {
-                    pos: 3,
-                    end: 8,
-                    kind: SyntaxKind::Identifier,
-                    text: "hoge",
-                },
-                Lex {
-                    pos: 8,
-                    end: 9,
-                    kind: SyntaxKind::ColonToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 9,
-                    end: 16,
-                    kind: SyntaxKind::StringKeyword,
-                    text: "string",
-                },
-                Lex {
-                    pos: 16,
-                    end: 17,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 3), SyntaxKind::LetKeyword, "let"),
+                helper::create_lex((3, 8), SyntaxKind::Identifier, "hoge"),
+                helper::create_lex((8, 9), SyntaxKind::ColonToken, ""),
+                helper::create_lex((9, 16), SyntaxKind::StringKeyword, "string"),
+                helper::create_lex((16, 17), SyntaxKind::SemicolonToken, ""),
             ],
         );
 
         assert_lexes(
             r#"var a = "hogehoge";"#,
             vec![
-                Lex {
-                    pos: 0,
-                    end: 3,
-                    kind: SyntaxKind::VarKeyword,
-                    text: "var",
-                },
-                Lex {
-                    pos: 3,
-                    end: 5,
-                    kind: SyntaxKind::Identifier,
-                    text: "a",
-                },
-                Lex {
-                    pos: 5,
-                    end: 7,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 7,
-                    end: 18,
-                    kind: SyntaxKind::StringLiteral,
-                    text: "hogehoge",
-                },
-                Lex {
-                    pos: 18,
-                    end: 19,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 18), SyntaxKind::StringLiteral, "hogehoge"),
+                helper::create_lex((18, 19), SyntaxKind::SemicolonToken, ""),
             ],
         );
         assert_lexes(
             r#"const b: string = "piyo";"#,
             vec![
-                Lex {
-                    pos: 0,
-                    end: 5,
-                    kind: SyntaxKind::ConstKeyword,
-                    text: "const",
-                },
-                Lex {
-                    pos: 5,
-                    end: 7,
-                    kind: SyntaxKind::Identifier,
-                    text: "b",
-                },
-                Lex {
-                    pos: 7,
-                    end: 8,
-                    kind: SyntaxKind::ColonToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 8,
-                    end: 15,
-                    kind: SyntaxKind::StringKeyword,
-                    text: "string",
-                },
-                Lex {
-                    pos: 15,
-                    end: 17,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 17,
-                    end: 24,
-                    kind: SyntaxKind::StringLiteral,
-                    text: "piyo",
-                },
-                Lex {
-                    pos: 24,
-                    end: 25,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 5), SyntaxKind::ConstKeyword, "const"),
+                helper::create_lex((5, 7), SyntaxKind::Identifier, "b"),
+                helper::create_lex((7, 8), SyntaxKind::ColonToken, ""),
+                helper::create_lex((8, 15), SyntaxKind::StringKeyword, "string"),
+                helper::create_lex((15, 17), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((17, 24), SyntaxKind::StringLiteral, "piyo"),
+                helper::create_lex((24, 25), SyntaxKind::SemicolonToken, ""),
             ],
         );
         assert_lexes(
             r#"const b: string = "'hello\n'";"#,
             vec![
-                Lex {
-                    pos: 0,
-                    end: 5,
-                    kind: SyntaxKind::ConstKeyword,
-                    text: "const",
-                },
-                Lex {
-                    pos: 5,
-                    end: 7,
-                    kind: SyntaxKind::Identifier,
-                    text: "b",
-                },
-                Lex {
-                    pos: 7,
-                    end: 8,
-                    kind: SyntaxKind::ColonToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 8,
-                    end: 15,
-                    kind: SyntaxKind::StringKeyword,
-                    text: "string",
-                },
-                Lex {
-                    pos: 15,
-                    end: 17,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 17,
-                    end: 29,
-                    kind: SyntaxKind::StringLiteral,
-                    text: "'hello\\n'",
-                },
-                Lex {
-                    pos: 29,
-                    end: 30,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 5), SyntaxKind::ConstKeyword, "const"),
+                helper::create_lex((5, 7), SyntaxKind::Identifier, "b"),
+                helper::create_lex((7, 8), SyntaxKind::ColonToken, ""),
+                helper::create_lex((8, 15), SyntaxKind::StringKeyword, "string"),
+                helper::create_lex((15, 17), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((17, 29), SyntaxKind::StringLiteral, "'hello\\n'"),
+                helper::create_lex((29, 30), SyntaxKind::SemicolonToken, ""),
             ],
         );
         assert_lexes(
             r#"let hoge: string;"#,
             vec![
-                Lex {
-                    pos: 0,
-                    end: 3,
-                    kind: SyntaxKind::LetKeyword,
-                    text: "let",
-                },
-                Lex {
-                    pos: 3,
-                    end: 8,
-                    kind: SyntaxKind::Identifier,
-                    text: "hoge",
-                },
-                Lex {
-                    pos: 8,
-                    end: 9,
-                    kind: SyntaxKind::ColonToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 9,
-                    end: 16,
-                    kind: SyntaxKind::StringKeyword,
-                    text: "string",
-                },
-                Lex {
-                    pos: 16,
-                    end: 17,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 3), SyntaxKind::LetKeyword, "let"),
+                helper::create_lex((3, 8), SyntaxKind::Identifier, "hoge"),
+                helper::create_lex((8, 9), SyntaxKind::ColonToken, ""),
+                helper::create_lex((9, 16), SyntaxKind::StringKeyword, "string"),
+                helper::create_lex((16, 17), SyntaxKind::SemicolonToken, ""),
             ],
         )
     }
@@ -335,36 +105,11 @@ mod variable_statement {
         assert_lexes(
             "var  a =   100;",
             vec![
-                Lex {
-                    pos: 0,
-                    end: 3,
-                    kind: SyntaxKind::VarKeyword,
-                    text: "var",
-                },
-                Lex {
-                    pos: 3,
-                    end: 6,
-                    kind: SyntaxKind::Identifier,
-                    text: "a",
-                },
-                Lex {
-                    pos: 6,
-                    end: 8,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 8,
-                    end: 14,
-                    kind: SyntaxKind::NumericLiteral,
-                    text: "100",
-                },
-                Lex {
-                    pos: 14,
-                    end: 15,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 6), SyntaxKind::Identifier, "a"),
+                helper::create_lex((6, 8), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((8, 14), SyntaxKind::NumericLiteral, "100"),
+                helper::create_lex((14, 15), SyntaxKind::SemicolonToken, ""),
             ],
         )
     }
@@ -374,48 +119,13 @@ mod variable_statement {
         assert_lexes(
             "var a: number = 100;",
             vec![
-                Lex {
-                    pos: 0,
-                    end: 3,
-                    kind: SyntaxKind::VarKeyword,
-                    text: "var",
-                },
-                Lex {
-                    pos: 3,
-                    end: 5,
-                    kind: SyntaxKind::Identifier,
-                    text: "a",
-                },
-                Lex {
-                    pos: 5,
-                    end: 6,
-                    kind: SyntaxKind::ColonToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 6,
-                    end: 13,
-                    kind: SyntaxKind::NumberKeyword,
-                    text: "number",
-                },
-                Lex {
-                    pos: 13,
-                    end: 15,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 15,
-                    end: 19,
-                    kind: SyntaxKind::NumericLiteral,
-                    text: "100",
-                },
-                Lex {
-                    pos: 19,
-                    end: 20,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 6), SyntaxKind::ColonToken, ""),
+                helper::create_lex((6, 13), SyntaxKind::NumberKeyword, "number"),
+                helper::create_lex((13, 15), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((15, 19), SyntaxKind::NumericLiteral, "100"),
+                helper::create_lex((19, 20), SyntaxKind::SemicolonToken, ""),
             ],
         )
     }

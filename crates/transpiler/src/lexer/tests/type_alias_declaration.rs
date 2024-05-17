@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod type_alias_declaration {
-    use crate::lexer::{tests::utils::assert_lexes, Lex};
+    use crate::lexer::tests::utils::{assert_lexes, LexCreateHelper as helper};
     use ast::kind::SyntaxKind;
 
     #[test]
@@ -8,36 +8,11 @@ mod type_alias_declaration {
         assert_lexes(
             "type num = number;",
             vec![
-                Lex {
-                    pos: 0,
-                    end: 4,
-                    kind: SyntaxKind::TypeKeyword,
-                    text: "type",
-                },
-                Lex {
-                    pos: 4,
-                    end: 8,
-                    kind: SyntaxKind::Identifier,
-                    text: "num",
-                },
-                Lex {
-                    pos: 8,
-                    end: 10,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 10,
-                    end: 17,
-                    kind: SyntaxKind::NumberKeyword,
-                    text: "number",
-                },
-                Lex {
-                    pos: 17,
-                    end: 18,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 4), SyntaxKind::TypeKeyword, "type"),
+                helper::create_lex((4, 8), SyntaxKind::Identifier, "num"),
+                helper::create_lex((8, 10), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((10, 17), SyntaxKind::NumberKeyword, "number"),
+                helper::create_lex((17, 18), SyntaxKind::SemicolonToken, ""),
             ],
         );
     }
@@ -47,36 +22,11 @@ mod type_alias_declaration {
         assert_lexes(
             "type str = string;",
             vec![
-                Lex {
-                    pos: 0,
-                    end: 4,
-                    kind: SyntaxKind::TypeKeyword,
-                    text: "type",
-                },
-                Lex {
-                    pos: 4,
-                    end: 8,
-                    kind: SyntaxKind::Identifier,
-                    text: "str",
-                },
-                Lex {
-                    pos: 8,
-                    end: 10,
-                    kind: SyntaxKind::EqualsToken,
-                    text: "",
-                },
-                Lex {
-                    pos: 10,
-                    end: 17,
-                    kind: SyntaxKind::StringKeyword,
-                    text: "string",
-                },
-                Lex {
-                    pos: 17,
-                    end: 18,
-                    kind: SyntaxKind::SemicolonToken,
-                    text: "",
-                },
+                helper::create_lex((0, 4), SyntaxKind::TypeKeyword, "type"),
+                helper::create_lex((4, 8), SyntaxKind::Identifier, "str"),
+                helper::create_lex((8, 10), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((10, 17), SyntaxKind::StringKeyword, "string"),
+                helper::create_lex((17, 18), SyntaxKind::SemicolonToken, ""),
             ],
         );
     }
