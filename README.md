@@ -36,16 +36,25 @@ ttt [OPTIONS] <FILE_PATH>
 ## Future Syntax Implementations (TODO)
 The following are some of the syntax that we plan to support in the future:
 
-- [ ] BinaryExpression: 1 + 1 or foo - bar
-- [ ] IfStatement: if, else if, and else statements
-- [ ] ForStatement: for loop
-- [ ] WhileStatement: while loop
-- [ ] ArrayLiteralExpression: [1, 2, 3]
-- [ ] ObjectLiteralExpression: { foo: 'bar' }
-- [ ] ClassDeclaration: Class definitions
-- [ ] InterfaceDeclaration: Interface definitions
-- [ ] EnumDeclaration: Enum definitions
-- [ ] ModuleDeclaration: Module definitions
+- [ ] **BinaryExpression**: Support for binary operations like 1 + 1 or foo - bar.
+- [ ] **UnaryExpression**: Support for unary operations like !true or -1.
+- [ ] **IfStatement**: Support for if, else if, and else statements.
+- [ ] **SwitchStatement**: Support for switch statements.
+- [ ] **ForStatement**: Support for for loop.
+- [ ] **WhileStatement**: Support for while loop.
+- [ ] **DoWhileStatement**: Support for do while loop.
+- [ ] **ArrayLiteralExpression**: Support for array literals like [1, 2, 3].
+- [ ] **ObjectLiteralExpression**: Support for object literals like { foo: 'bar' }.
+- [ ] **ClassDeclaration**: Support for class definitions.
+- [ ] **InterfaceDeclaration**: Support for interface definitions.
+- [ ] **EnumDeclaration**: Support for enum definitions.
+- [ ] **ModuleDeclaration**: Support for module definitions.
+- [ ] **ImportDeclaration**: Support for import statements.
+- [ ] **ExportDeclaration**: Support for export statements.
+- [ ] **ArrowFunction**: Support for arrow functions.
+- [ ] **TemplateLiteral**: Support for template literals.
+- [ ] **OptionalChaining**: Support for optional chaining.
+- [ ] **NullishCoalescing**: Support for nullish coalescing.
 
 ## License
 [MIT © kqito](./LICENSE)
