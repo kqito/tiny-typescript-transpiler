@@ -32,15 +32,19 @@ pub enum CharacterCodes {
     Tilde,
     Backspace,
     FormFeed,
+    Numeric,
+    Alphabetic,
     // ByteOrderMark,
     Tab,
     VerticalTab,
-    Unkown,
+    Unknown,
 }
 
 impl From<u8> for CharacterCodes {
     fn from(byte: u8) -> Self {
         match byte {
+            b'a'..=b'z' | b'A'..=b'Z' => CharacterCodes::Alphabetic,
+            b'0'..=b'9' => CharacterCodes::Numeric,
             b'&' => CharacterCodes::Ampersand,
             b'*' => CharacterCodes::Asterisk,
             b'@' => CharacterCodes::At,
@@ -60,7 +64,7 @@ impl From<u8> for CharacterCodes {
             b'>' => CharacterCodes::GreaterThan,
             b'#' => CharacterCodes::Hash,
             b'<' => CharacterCodes::LessThan,
-            b'0' => CharacterCodes::Minus,
+            b'-' => CharacterCodes::Minus,
             b'{' => CharacterCodes::OpenBrace,
             b'[' => CharacterCodes::OpenBracket,
             b'(' => CharacterCodes::OpenParen,
@@ -75,7 +79,7 @@ impl From<u8> for CharacterCodes {
             0x0C => CharacterCodes::FormFeed,
             0x09 => CharacterCodes::Tab,
             0x0B => CharacterCodes::VerticalTab,
-            _ => CharacterCodes::Unkown,
+            _ => CharacterCodes::Unknown,
         }
     }
 }

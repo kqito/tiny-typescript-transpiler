@@ -38,4 +38,16 @@ mod variable_statement {
         assert_emit_stmt(r#"const str: string = "test"#, r#"var str = "test";"#);
         assert_emit_stmt(r#"const hi: str = "hello";"#, r#"var hi = "hello";"#);
     }
+
+    #[test]
+    fn emit_variable_declaration_with_literals() {
+        assert_emit_stmt("  var a: number = 100;", "var a = 100;");
+        assert_emit_stmt(r#"var a: string = "hello";"#, r#"var a = "hello";"#);
+        assert_emit_stmt("  var a: RegExp = /test/;", "var a = /test/;");
+        assert_emit_stmt("  var a: boolean = true;", "var a = true;");
+        assert_emit_stmt("  var a: boolean = false;", "var a = false;");
+        assert_emit_stmt("  var a = undefined;", "var a = undefined;");
+        assert_emit_stmt("  var a = null;", "var a = null;");
+        assert_emit_stmt("  var a = 0b101;", "var a = 0b101;");
+    }
 }

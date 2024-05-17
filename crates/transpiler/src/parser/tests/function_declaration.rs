@@ -4,6 +4,7 @@ mod function_statement {
     use ast::declaration::*;
     use ast::expression::*;
 
+    #[test]
     fn parse_function_declaration() {
         assert_parse(
             "function fn() {}",
@@ -45,7 +46,7 @@ mod function_statement {
                 vec![helper.var_decl(
                     (20, 38),
                     helper.ident((20, 24), "num"),
-                    Some(helper.literal((34, 38), Literal::Numeric(100))),
+                    Some(helper.literal((34, 38), Literal::Numeric(100.to_string()))),
                     Some(helper.type_keyword((25, 32), Type::NumberKeyword)),
                 )],
             ),

@@ -91,7 +91,7 @@ impl<'a, I: Input<'a>> Parse<'a, I> for ExpressionStatement {
             None => return None,
         };
 
-        let peek = parser.lexer.peek();
+        parser.lexer.peek();
         pop_match_kind!(parser, SyntaxKind::SemicolonToken);
         let end = parser.lexer.input.current_end();
 

@@ -1,13 +1,12 @@
 pub mod inputer;
-mod reg;
 mod tests;
 
 use ast::char::CharacterCodes;
 use ast::kind::SyntaxKind;
 use inputer::Input;
-use reg::is_match_char;
 use std::str;
 
+#[allow(unused)]
 pub trait Controller<'a, T> {
     fn pop(&mut self) -> T;
     fn peek(&mut self) -> T;
@@ -46,7 +45,7 @@ impl<'a, I: Input<'a>> From<&'a mut I> for Lexer<'a, I> {
 
 impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
     fn pop(&mut self) -> Lex<'a> {
-        let ret = self.pick_next();
+        let ret = self.pick();
 
         self.input.bump();
 
@@ -55,9 +54,10 @@ impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
 
     fn peek(&mut self) -> Lex<'a> {
         let reset_pos = self.input.current_pos();
+        let reset_end = self.input.current_end();
         let ret = self.pop();
 
-        self.input.reset_to(reset_pos);
+        self.input.reset_to(reset_pos, reset_end);
         ret
     }
 
@@ -66,13 +66,14 @@ impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
         F: FnMut(&Lex<'a>) -> bool,
     {
         let reset_pos = self.input.current_pos();
+        let reset_end = self.input.current_end();
         let ret = self.pop();
 
         if pred(&ret) {
             return Some(ret);
         }
 
-        self.input.reset_to(reset_pos);
+        self.input.reset_to(reset_pos, reset_end);
         None
     }
 
@@ -97,6 +98,7 @@ impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
         F: FnMut(&Lex<'a>) -> bool,
     {
         let reset_pos = self.input.current_pos();
+        let reset_end = self.input.current_end();
         let mut target: Option<Lex<'a>> = None;
         loop {
             let lex = self.pop();
@@ -112,12 +114,13 @@ impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
             break;
         }
 
-        self.input.reset_to(reset_pos);
+        self.input.reset_to(reset_pos, reset_end);
         target
     }
 
     fn peek_all(&mut self) -> Lexes<'a> {
         let reset_pos = self.input.current_pos();
+        let reset_end = self.input.current_end();
         let mut lexes = Vec::new();
         loop {
             let lex = self.pop();
@@ -128,92 +131,89 @@ impl<'a, I: Input<'a>> Controller<'a, Lex<'a>> for Lexer<'a, I> {
             lexes.push(lex);
         }
 
-        self.input.reset_to(reset_pos);
+        self.input.reset_to(reset_pos, reset_end);
         lexes
     }
 }
 
 impl<'a, I: Input<'a>> Lexer<'a, I> {
-    fn pick_string_literal(&mut self) -> Lex<'a> {
-        let quate_char = self.input.peek();
-        let text = self.input.peek_while(|c| quate_char != Some(c));
-        self.input.peek(); // Skip close quate
-
+    fn new_lex(&self, text: &'a str, kind: SyntaxKind) -> Lex<'a> {
         Lex {
             pos: self.input.current_pos(),
             end: self.input.current_end(),
             text,
-            kind: SyntaxKind::StringLiteral,
+            kind,
         }
     }
 
-    fn pick_number(&mut self) -> Lex<'a> {
-        let text = self.input.peek_while(|c| is_match_char(c, reg::NUMBER_REG));
-
-        return Lex {
-            pos: self.input.current_pos(),
-            end: self.input.current_end(),
-            text,
-            kind: SyntaxKind::NumericLiteral,
-        };
-    }
-
-    fn pick_string(&mut self) -> Lex<'a> {
-        let text = self.input.peek_while(|c| is_match_char(c, reg::STRING_REG));
-
-        return Lex {
-            pos: self.input.current_pos(),
-            end: self.input.current_end(),
-            text,
-            kind: SyntaxKind::try_from(text).unwrap_or(SyntaxKind::Identifier),
-        };
-    }
-
-    fn pick_next(&mut self) -> Lex<'a> {
-        self.input.peek_while(|c| is_match_char(c, reg::SPACE_REG));
-
+    fn pick(&mut self) -> Lex<'a> {
+        self.input.peek_while(|c| c.is_ascii_whitespace());
         let current_char = match self.input.peek_ref() {
             Some(c) => c,
             // If the content has been reached at end
             None => {
-                return Lex {
-                    pos: self.input.current_pos(),
-                    end: self.input.current_end(),
-                    text: "",
-                    kind: SyntaxKind::EOF,
-                };
+                return self.new_lex("", SyntaxKind::EOF);
             }
         };
 
-        if is_match_char(current_char, reg::NUMBER_REG) {
-            return self.pick_number();
-        }
-
-        if is_match_char(current_char, reg::STRING_REG) {
-            return self.pick_string();
-        }
-
         match CharacterCodes::from(current_char as u8) {
-            CharacterCodes::SingleQuote | CharacterCodes::DoubleQuote => self.pick_string_literal(),
-            char => {
-                self.input.peek();
-                let kind = match char {
-                    CharacterCodes::Unkown => {
-                        println!("Unsupported character: {} ", &current_char.to_string()); // TODO: Should display only in test
-                        SyntaxKind::Unknown
+            CharacterCodes::Numeric => {
+                // Support 'b' character for binary number
+                let text = self
+                    .input
+                    .peek_while(|c| c.is_ascii_digit() || matches!(c, 'b'));
+                self.new_lex(text, SyntaxKind::NumericLiteral)
+            }
+            CharacterCodes::Alphabetic => {
+                let text = self.input.peek_while(|c| c.is_ascii_alphanumeric());
+                if let Ok(kind) = SyntaxKind::try_from(text) {
+                    return self.new_lex(text, kind);
+                }
+
+                self.new_lex(text, SyntaxKind::Identifier)
+            }
+            CharacterCodes::SingleQuote | CharacterCodes::DoubleQuote => {
+                let quate_char = self.input.peek();
+                let text = self.input.peek_while(|c| quate_char != Some(c));
+                self.input.peek(); // Skip close quate
+
+                self.new_lex(text, SyntaxKind::StringLiteral)
+            }
+            // Reg
+            CharacterCodes::Slash => {
+                let pos = self.input.current_end();
+                self.input.peek(); // Skip '/'
+
+                // If the content has no '/' character
+                if let None = self.input.find_ref(|c| c == '/') {
+                    return self.new_lex("", SyntaxKind::SlashToken);
+                }
+
+                let text = self.input.peek_while(|c| c != '/');
+                self.input.peek(); // Skip '/'
+                let end = self.input.current_end();
+
+                match text.len() {
+                    // Infer the text is a comment
+                    1 => {
+                        let text = self.input.peek_while(|c| c != '\n');
+                        return self.new_lex(text, SyntaxKind::Unknown); // TODO
                     }
-                    _ => SyntaxKind::try_from(char).unwrap_or(SyntaxKind::Unknown),
-                };
-
-                // Token
-                let lex = Lex {
-                    pos: self.input.current_pos(),
-                    end: self.input.current_end(),
-                    text: "",
-                    kind,
-                };
-
-                lex
+                    // Infer the text is a reg ex
+                    _ => {
+                        let text = self.input.slice_ref(pos, end);
+                        return self.new_lex(text, SyntaxKind::RegularExpressionLiteral);
+                    }
+                }
+            }
+            CharacterCodes::Unknown => {
+                self.input.peek();
+                self.new_lex("", SyntaxKind::Unknown)
+            }
+            // Maybe char is a pure syntax kind.
+            c => {
+                self.input.peek();
+                self.new_lex("", SyntaxKind::try_from(c).unwrap_or(SyntaxKind::Unknown))
             }
         }
     }
@@ -222,6 +222,7 @@ impl<'a, I: Input<'a>> Lexer<'a, I> {
 #[cfg(test)]
 mod lexer_test {
     use crate::lexer::inputer::Inputer;
+    use pretty_assertions::assert_eq;
 
     use super::*;
     use ast::kind::SyntaxKind;

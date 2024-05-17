@@ -27,6 +27,11 @@ impl Emit for Literal {
         match self {
             Literal::Numeric(num) => emitter.push(&num.to_string()),
             Literal::String(str) => emitter.push(&format!(r#""{}""#, str)),
+            Literal::True => emitter.push("true"),
+            Literal::False => emitter.push("false"),
+            Literal::Undefined => emitter.push("undefined"),
+            Literal::Null => emitter.push("null"),
+            Literal::RegEx(regex) => emitter.push(regex),
         }
     }
 }

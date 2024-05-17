@@ -5,9 +5,6 @@ use crate::output::{pretty_print, Status};
 
 #[derive(Error, Debug)]
 pub enum CliError {
-    #[error("Missing entry file")]
-    MissingEntryFile(String),
-
     #[error("Invalid entry file path")]
     InvalidEntryFilePath(String),
 
@@ -92,9 +89,6 @@ fn print_transpile_error(error: &TranspileError) {
 impl CliError {
     pub fn pretty_print(&self) {
         match self {
-            CliError::MissingEntryFile(path) => {
-                pretty_print(&format!("Missing entry file: {}", path), Status::Error);
-            }
             CliError::InvalidEntryFilePath(path) => {
                 pretty_print(&format!("Invalid entry file path: {}", path), Status::Error);
             }

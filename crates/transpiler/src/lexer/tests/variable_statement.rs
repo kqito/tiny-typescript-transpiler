@@ -15,6 +15,84 @@ mod variable_statement {
                 helper::create_lex((11, 12), SyntaxKind::SemicolonToken, ""),
             ],
         );
+
+        assert_lexes(
+            "var a = '100';",
+            vec![
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 13), SyntaxKind::StringLiteral, "100"),
+                helper::create_lex((13, 14), SyntaxKind::SemicolonToken, ""),
+            ],
+        );
+
+        assert_lexes(
+            "var a = true;",
+            vec![
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 12), SyntaxKind::TrueKeyword, "true"),
+                helper::create_lex((12, 13), SyntaxKind::SemicolonToken, ""),
+            ],
+        );
+
+        assert_lexes(
+            "var a = false;",
+            vec![
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 13), SyntaxKind::FalseKeyword, "false"),
+                helper::create_lex((13, 14), SyntaxKind::SemicolonToken, ""),
+            ],
+        );
+
+        assert_lexes(
+            "var a = undefined;",
+            vec![
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 17), SyntaxKind::UndefinedKeyword, "undefined"),
+                helper::create_lex((17, 18), SyntaxKind::SemicolonToken, ""),
+            ],
+        );
+
+        assert_lexes(
+            "var a = null;",
+            vec![
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 12), SyntaxKind::NullKeyword, "null"),
+                helper::create_lex((12, 13), SyntaxKind::SemicolonToken, ""),
+            ],
+        );
+
+        // Binary
+        assert_lexes(
+            "var a = 0b1010;",
+            vec![
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 14), SyntaxKind::NumericLiteral, "0b1010"),
+                helper::create_lex((14, 15), SyntaxKind::SemicolonToken, ""),
+            ],
+        );
+
+        assert_lexes(
+            "var a = /ab+c/;",
+            vec![
+                helper::create_lex((0, 3), SyntaxKind::VarKeyword, "var"),
+                helper::create_lex((3, 5), SyntaxKind::Identifier, "a"),
+                helper::create_lex((5, 7), SyntaxKind::EqualsToken, ""),
+                helper::create_lex((7, 14), SyntaxKind::RegularExpressionLiteral, "/ab+c/"),
+                helper::create_lex((14, 15), SyntaxKind::SemicolonToken, ""),
+            ],
+        );
     }
 
     #[test]

@@ -31,7 +31,7 @@ mod expression_statement {
                 helper.call_expr(
                     (0, 5),
                     helper.ident_expr((0, 2), "fn"),
-                    vec![helper.literal((3, 4), Literal::Numeric(0))],
+                    vec![helper.literal((3, 4), Literal::Numeric(0.to_string()))],
                 ),
             )],
         );

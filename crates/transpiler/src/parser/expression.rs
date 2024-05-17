@@ -15,24 +15,12 @@ impl<'a, I: Input<'a>> Parse<'a, I> for Expression {
         let lex = parser.lexer.pop();
 
         match lex.kind {
-            SyntaxKind::NumericLiteral => match lex.text.parse::<u32>() {
-                Ok(literal_number) => {
-                    return Some(Node::new(
-                        Loc::new(lex.pos, lex.end),
-                        Expression::Literal(Literal::Numeric(literal_number)),
-                    ));
-                }
-                Err(_) => {
-                    let error_message = format!("Todo: {:?}:{:?}", lex.kind, lex.text);
-                    parser.error_context.push(ParseError {
-                        pos: lex.pos,
-                        end: lex.end,
-                        message: error_message,
-                    });
-
-                    return None;
-                }
-            },
+            SyntaxKind::NumericLiteral => {
+                return Some(Node::new(
+                    Loc::new(lex.pos, lex.end),
+                    Expression::Literal(Literal::Numeric(String::from(lex.text))),
+                ));
+            }
             SyntaxKind::StringLiteral => {
                 return Some(Node::new(
                     Loc::new(lex.pos, lex.end),
@@ -45,6 +33,36 @@ impl<'a, I: Input<'a>> Parse<'a, I> for Expression {
                     Expression::Identifier(Identifier {
                         text: String::from(lex.text),
                     }),
+                ));
+            }
+            SyntaxKind::RegularExpressionLiteral => {
+                return Some(Node::new(
+                    Loc::new(lex.pos, lex.end),
+                    Expression::Literal(Literal::RegEx(String::from(lex.text))),
+                ));
+            }
+            SyntaxKind::TrueKeyword => {
+                return Some(Node::new(
+                    Loc::new(lex.pos, lex.end),
+                    Expression::Literal(Literal::True),
+                ));
+            }
+            SyntaxKind::FalseKeyword => {
+                return Some(Node::new(
+                    Loc::new(lex.pos, lex.end),
+                    Expression::Literal(Literal::False),
+                ));
+            }
+            SyntaxKind::UndefinedKeyword => {
+                return Some(Node::new(
+                    Loc::new(lex.pos, lex.end),
+                    Expression::Literal(Literal::Undefined),
+                ));
+            }
+            SyntaxKind::NullKeyword => {
+                return Some(Node::new(
+                    Loc::new(lex.pos, lex.end),
+                    Expression::Literal(Literal::Null),
                 ));
             }
             _ => {

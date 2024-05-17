@@ -1,5 +1,4 @@
-use transpiler::TranspileError;
-
+#[allow(unused)]
 pub enum Status {
     Error,
     Warning,

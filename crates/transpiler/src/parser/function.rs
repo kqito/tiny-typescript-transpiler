@@ -125,10 +125,11 @@ impl<'a, I: Input<'a>> Parse<'a, I> for CallExpression {
 
     fn parse(parser: &mut Parser<'a, I>) -> Self::Ast {
         let save_pos = parser.lexer.input.current_pos();
+        let save_end = parser.lexer.input.current_end();
         let ident = match Identifier::try_parse(parser) {
             Ok(ident) => ident,
             Err(_) => {
-                parser.lexer.input.reset_to(save_pos);
+                parser.lexer.input.reset_to(save_pos, save_end);
                 return None;
             }
         };
@@ -137,7 +138,7 @@ impl<'a, I: Input<'a>> Parse<'a, I> for CallExpression {
         let args = match Arguments::try_parse(parser) {
             Ok(args) => args,
             Err(_) => {
-                parser.lexer.input.reset_to(save_pos);
+                parser.lexer.input.reset_to(save_pos, save_end);
                 return None;
             }
         };

@@ -5,7 +5,6 @@ mod function;
 mod statement;
 mod tests;
 mod types;
-mod utils;
 
 use ast::statement::*;
 

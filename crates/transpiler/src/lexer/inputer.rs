@@ -1,6 +1,7 @@
 use core::str::CharIndices;
 
 /// References from: https://github.com/swc-project/swc/blob/main/crates/swc_common/src/input.rs
+#[allow(unused)]
 pub trait Input<'a>: Clone {
     fn peek(&mut self) -> Option<char>;
     fn peek_ref(&self) -> Option<char>;
@@ -11,14 +12,18 @@ pub trait Input<'a>: Clone {
     fn current_end(&self) -> u32;
 
     fn slice(&mut self, start: u32, end: u32) -> &'a str;
+    fn slice_ref(&mut self, start: u32, end: u32) -> &'a str;
     fn peek_while<F>(&mut self, f: F) -> &'a str
     where
         F: FnMut(char) -> bool;
     fn find<F>(&mut self, f: F) -> Option<u32>
     where
         F: FnMut(char) -> bool;
+    fn find_ref<F>(&mut self, f: F) -> Option<u32>
+    where
+        F: FnMut(char) -> bool;
 
-    fn reset_to(&mut self, to: u32);
+    fn reset_to(&mut self, pos: u32, end: u32);
 }
 
 #[derive(Debug, Clone)]
@@ -98,6 +103,11 @@ impl<'a> Input<'a> for Inputer<'a> {
         result
     }
 
+    fn slice_ref(&mut self, pos: u32, end: u32) -> &'a str {
+        let mut s = self.clone();
+        s.slice(pos, end)
+    }
+
     fn peek_while<F>(&mut self, mut pred: F) -> &'a str
     where
         F: FnMut(char) -> bool,
@@ -143,16 +153,25 @@ impl<'a> Input<'a> for Inputer<'a> {
         Some(self.end)
     }
 
-    fn reset_to(&mut self, to: u32) {
-        self.pos = to;
-        self.end = to;
-        self.content_iter = self.content[(to as usize)..].char_indices();
+    fn find_ref<F>(&mut self, pred: F) -> Option<u32>
+    where
+        F: FnMut(char) -> bool,
+    {
+        let mut s = self.clone();
+        s.find(pred)
+    }
+
+    fn reset_to(&mut self, pos: u32, end: u32) {
+        self.pos = pos;
+        self.end = end;
+        self.content_iter = self.content[(pos as usize)..].char_indices();
     }
 }
 
 #[cfg(test)]
 mod inputer {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     pub fn peek() {
@@ -220,6 +239,18 @@ mod inputer {
     }
 
     #[test]
+    pub fn slice_ref() {
+        let mut inputer = Inputer::from("abc/def");
+        assert_eq!(inputer.slice_ref(0, 3), "abc");
+        assert_eq!(inputer.current_pos(), 0);
+        assert_eq!(inputer.current_end(), 0);
+
+        assert_eq!(inputer.slice_ref(4, 7), "def");
+        assert_eq!(inputer.current_pos(), 0);
+        assert_eq!(inputer.current_end(), 0);
+    }
+
+    #[test]
     pub fn peek_while() {
         let mut inputer = Inputer::from("abc/def");
         assert_eq!(inputer.peek_while(|c| c != '/'), "abc");
@@ -252,6 +283,22 @@ mod inputer {
     }
 
     #[test]
+    pub fn find_ref() {
+        let mut inputer = Inputer::from("abc/def");
+        assert_eq!(inputer.find_ref(|c| c == '/'), Some(4));
+        assert_eq!(inputer.current_pos(), 0);
+        assert_eq!(inputer.current_end(), 0);
+
+        assert_eq!(inputer.find_ref(|c| c == 'z'), None);
+        assert_eq!(inputer.current_pos(), 0);
+        assert_eq!(inputer.current_end(), 0);
+
+        assert_eq!(inputer.find_ref(|c| c == 'e'), Some(6));
+        assert_eq!(inputer.current_pos(), 0);
+        assert_eq!(inputer.current_end(), 0);
+    }
+
+    #[test]
     pub fn reset_to() {
         let mut inputer = Inputer::from("abc");
         assert_eq!(inputer.peek(), Some('a'));
@@ -261,7 +308,7 @@ mod inputer {
         assert_eq!(inputer.current_pos(), 1);
         assert_eq!(inputer.current_end(), 1);
 
-        inputer.reset_to(0);
+        inputer.reset_to(0, 0);
         assert_eq!(inputer.current_pos(), 0);
         assert_eq!(inputer.current_end(), 0);
 

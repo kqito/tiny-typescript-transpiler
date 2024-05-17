@@ -7,8 +7,13 @@ pub struct Identifier {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Literal {
-    Numeric(u32),
+    Numeric(String),
     String(String),
+    RegEx(String),
+    True,
+    False,
+    Undefined,
+    Null,
 }
 
 pub type Arguments = Vec<Node<Expression>>;
