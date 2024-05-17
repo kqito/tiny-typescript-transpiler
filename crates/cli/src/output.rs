@@ -68,6 +68,17 @@ pub fn print_transpile_error(error: &TranspileError) {
                 );
             }
         }
+        TranspileError::EmitError {
+            source_file,
+            context,
+        } => {
+            for error in &context.errors {
+                pretty_print(
+                    &format!("{}: {}", source_file.path, error.message),
+                    Status::Error,
+                );
+            }
+        }
         _ => pretty_print(&error.to_string(), Status::Error),
     }
 }

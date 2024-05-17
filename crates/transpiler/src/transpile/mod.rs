@@ -1,4 +1,3 @@
-use std::any::Any;
 use std::fmt::Debug;
 
 use crate::lexer::inputer::Inputer;
@@ -51,7 +50,17 @@ pub fn transpile_file(context: TranspileContext) -> Result<TranspileResult, Tran
     debugger(&modules);
 
     let emitter = Emitter::new();
-    let emit_result = emitter.emit_module(&modules)?;
+    // let emit_result = emitter.emit_module(&modules)?;
+
+    let emit_result = match emitter.emit_module(&modules) {
+        Ok(result) => result,
+        Err(err) => {
+            return Err(TranspileError::EmitError {
+                source_file: source_file.clone(),
+                context: err,
+            })
+        }
+    };
 
     let transpile_result = TranspileResult { emit_result };
 

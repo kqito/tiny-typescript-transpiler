@@ -1,7 +1,7 @@
-pub mod expression_statement;
-pub mod function_declaration;
-pub mod type_alias_declaration;
-pub mod variable_statement;
+mod expression_statement;
+mod function_declaration;
+mod type_alias_declaration;
+mod variable_statement;
 
 #[cfg(test)]
 pub mod utils {

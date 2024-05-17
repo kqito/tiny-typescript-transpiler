@@ -1,3 +1,6 @@
+mod expression_statement;
+mod function_declaration;
+mod type_alias_declaration;
 mod variable_statement;
 
 #[cfg(test)]
@@ -14,12 +17,22 @@ mod utils {
         let mut parse = Parser::new(lexer);
         let modules = match parse.parse_module() {
             Ok(modules) => modules,
-            Err(err) => panic!("Failed to parse module: {:?}", err),
+            // highlight panic message
+            Err(err) => panic!(
+                "Failed to parse module: \x1b[31m{:?} => {:?}\x1b[0m",
+                content, err.errors
+            ),
         };
 
         let emitter = Emitter::new();
-        let emit_result = emitter.emit_module(&modules).unwrap();
+        let emit_result = match emitter.emit_module(&modules) {
+            Ok(r) => r,
+            Err(err) => panic!(
+                "Failed to emit module: \x1b[31m{:?} => {:?}\x1b[0m",
+                content, err.errors
+            ),
+        };
 
-        assert_eq!(emit_result, expected.to_string());
+        assert_eq!(&emit_result, expected);
     }
 }

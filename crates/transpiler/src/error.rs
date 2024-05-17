@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-use crate::{parser::ParseErrorContext, source_file::SourceFile};
+use crate::{emitter::EmitErrorContext, parser::ParseErrorContext, source_file::SourceFile};
 
 #[derive(Error, Debug, PartialEq)]
 pub enum TranspileError {
@@ -10,8 +10,11 @@ pub enum TranspileError {
         context: ParseErrorContext,
     },
 
-    #[error("Failed transpiling: {message}")]
-    EmittingError { message: String },
+    #[error("Failed transpiling: {context:?}")]
+    EmitError {
+        source_file: SourceFile,
+        context: EmitErrorContext,
+    },
 
     #[error("Unimplemented")]
     Unimplemented,

@@ -1,30 +1,38 @@
 mod declaration;
+mod error;
 mod expression;
+mod function;
 mod statement;
 mod tests;
 
 use ast::statement::Modules;
 
-use crate::error::TranspileError;
+pub use self::error::EmitErrorContext;
 
 trait Emit {
     fn emit(&self, emitter: &mut Emitter) -> ();
 }
 
 pub struct Emitter {
-    result: String,
+    pub(crate) result: String,
+    pub(crate) error_context: EmitErrorContext,
 }
 
 impl Emitter {
     pub fn new() -> Emitter {
         Self {
             result: String::from(""),
+            error_context: EmitErrorContext::new(),
         }
     }
 
-    pub fn emit_module(&self, module: &Modules) -> Result<String, TranspileError> {
+    pub fn emit_module(&self, module: &Modules) -> Result<String, EmitErrorContext> {
         let mut emitter = Self::new();
         module.emit(&mut emitter);
+
+        if emitter.error_context.has_errors() {
+            return Err(emitter.error_context);
+        }
 
         Ok(emitter.result.clone())
     }

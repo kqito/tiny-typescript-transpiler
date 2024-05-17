@@ -4,7 +4,14 @@ use ast::statement::*;
 
 impl Emit for Modules {
     fn emit(&self, emitter: &mut Emitter) -> () {
-        self.iter().for_each(|node| match &node.item {
+        self.iter().for_each(|node| node.item.emit(emitter));
+    }
+}
+
+#[warn(unreachable_patterns)]
+impl Emit for Statement {
+    fn emit(&self, emitter: &mut Emitter) -> () {
+        match self {
             Statement::VariableStatement(stmt) => {
                 stmt.emit(emitter);
             }
@@ -12,13 +19,12 @@ impl Emit for Modules {
                 stmt.emit(emitter);
             }
             Statement::FunctionDeclaration(stmt) => {
-                todo!();
+                stmt.emit(emitter);
             }
             Statement::ExpressionStatement(stmt) => {
-                todo!();
+                stmt.emit(emitter);
             }
-            _ => {}
-        });
+        }
     }
 }
 

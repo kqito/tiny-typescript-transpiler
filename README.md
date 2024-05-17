@@ -13,6 +13,7 @@ Currently, this library supports the following syntax:
   - Example: `fn();`
 - Function Declaration
   - Example: `function fn () { var num: number = 100; const hi = "hello"; }`
+  - Example: `function alertMessage (message: string) { alert(message); }`
 - Type Alias Declaration
   - Example: `type str = string;`
 - Variable Declaration

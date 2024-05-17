@@ -10,7 +10,7 @@ impl Emit for Expression {
             }
             Expression::Literal(literal) => literal.emit(emitter),
             Expression::CallExpression(call_expr) => {
-                todo!();
+                call_expr.emit(emitter);
             }
         };
     }
@@ -28,5 +28,20 @@ impl Emit for Literal {
             Literal::Numeric(num) => emitter.push(&num.to_string()),
             Literal::String(str) => emitter.push(&format!(r#""{}""#, str)),
         }
+    }
+}
+
+impl Emit for CallExpression {
+    fn emit(&self, emitter: &mut Emitter) -> () {
+        self.expression.item.emit(emitter);
+        emitter.push("(");
+        self.arguments.iter().enumerate().for_each(|(i, arg)| {
+            if i != 0 {
+                emitter.push(", ");
+            }
+
+            arg.item.emit(emitter);
+        });
+        emitter.push(")");
     }
 }
