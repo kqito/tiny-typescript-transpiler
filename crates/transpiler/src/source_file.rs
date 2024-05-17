@@ -16,7 +16,12 @@ pub enum SourceFileError {
 
 impl SourceFile {
     pub fn load(path: &str) -> Result<Self, SourceFileError> {
-        let name = match Path::new(path).file_name().unwrap().to_str() {
+        let file_name = match Path::new(path).file_name() {
+            Some(name) => name,
+            None => return Err(SourceFileError::FailedReadFile),
+        };
+
+        let name = match file_name.to_str() {
             Some(name) => String::from(name),
             None => return Err(SourceFileError::FailedReadFile),
         };

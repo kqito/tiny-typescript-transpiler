@@ -1,8 +1,7 @@
 use clap::Parser;
-use errors::CliError;
 use options::CliOptions;
-use output::{pretty_print, print_transpile_error, Status};
-use transpiler::transpile;
+use output::{pretty_print, Status};
+use transpiler::{transpile, TranspileOptions};
 
 mod errors;
 mod options;
@@ -12,20 +11,27 @@ fn main() {
     let options = match CliOptions::try_parse() {
         Ok(options) => options,
         Err(err) => {
-            pretty_print(&CliError::MissingEntryFile.to_string(), Status::Error);
             eprintln!("{}", err);
             std::process::exit(1);
         }
     };
 
-    let transpile_result = transpile(options.into());
+    let transpile_options: TranspileOptions = match options.try_into() {
+        Ok(options) => options,
+        Err(err) => {
+            err.pretty_print();
+            std::process::exit(1);
+        }
+    };
+
+    let transpile_result = transpile(transpile_options);
     match transpile_result {
         Ok(result) => {
             pretty_print(&result.emit_result, Status::Success);
         }
-        Err(error) => {
-            print_transpile_error(&error);
-            std::process::exit(1);
+        Err(err) => {
+            let cli_error: errors::CliError = err.into();
+            cli_error.pretty_print();
         }
     }
 }

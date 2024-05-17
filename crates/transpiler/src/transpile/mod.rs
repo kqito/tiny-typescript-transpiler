@@ -50,7 +50,6 @@ pub fn transpile_file(context: TranspileContext) -> Result<TranspileResult, Tran
     debugger(&modules);
 
     let emitter = Emitter::new();
-    // let emit_result = emitter.emit_module(&modules)?;
 
     let emit_result = match emitter.emit_module(&modules) {
         Ok(result) => result,
