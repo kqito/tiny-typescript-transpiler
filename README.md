@@ -7,35 +7,30 @@ Tiny-Typescript-Transpiler is a simple learning library for transpilers like swc
 ## Concept
 This library is designed as a simplified learning tool for understanding how transpilers like swc work. It does not include the complexity of binders and checkers.
 
-## Supported Syntax
-Currently, this library supports the following syntax:
-- CallExpression
-  - Example: `fn();`
-- Function Declaration
-  - Example: `function fn () { var num: number = 100; const hi = "hello"; }`
-  - Example: `function alertMessage (message: string) { alert(message); }`
-- Type Alias Declaration
-  - Example: `type str = string;`
-- Variable Declaration
-  - Example: `const hi: str = "hello";`
+## Supported features
+### Primitives
+- [x] string
+- [x] number
+- [x] boolean
+- [x] undefined
+- [x] null
+- [ ] symbol
+- [ ] bigint
 
-## Usage
-To use the Tiny-Typescript-Transpiler, use the following command:
+### Literal
+- [x] Boolean literals
+- [x] Numeric literals
+- [x] RegExp literals
+- [x] String literals
+- [ ] Object literals
+- [ ] Array literals
+- [ ] Floating-point literals
 
-```bash
-ttt [OPTIONS] <FILE_PATH>
-```
-
-### Arguments
-- <FILE_PATH>: The path to the file you want to transpile.
-
-### Options
-- -d, --debug: Enable debug mode.
-- -h, --help: Print help information.
-
-## Future Syntax Implementations (TODO)
-The following are some of the syntax that we plan to support in the future:
-
+### Syntax (partial supports)
+- [x] **CallExpression**: Support for `fn()`
+- [x] **FunctionDeclaration**: Support for  `function alertMessage (message: string) { alert(message); }`
+- [x] **TypeAliasDeclaration**: Support for `type str = string;`
+- [x] **VariableDeclaration**: Support for  `const hi: str = "hello";`
 - [ ] **BinaryExpression**: Support for binary operations like 1 + 1 or foo - bar.
 - [ ] **UnaryExpression**: Support for unary operations like !true or -1.
 - [ ] **IfStatement**: Support for if, else if, and else statements.
@@ -55,6 +50,24 @@ The following are some of the syntax that we plan to support in the future:
 - [ ] **TemplateLiteral**: Support for template literals.
 - [ ] **OptionalChaining**: Support for optional chaining.
 - [ ] **NullishCoalescing**: Support for nullish coalescing.
+
+### Misc
+- [ ] Comment
+- [ ] Transpiler Options
+
+## Usage
+To use the Tiny-Typescript-Transpiler, use the following command:
+
+```bash
+ttt [OPTIONS] <FILE_PATH>
+```
+
+### Arguments
+- <FILE_PATH>: The path to the file you want to transpile.
+
+### Options
+- -d, --debug: Enable debug mode.
+- -h, --help: Print help information.
 
 ## License
 [MIT © kqito](./LICENSE)
