@@ -9,7 +9,6 @@ repository = "https://github.com/kqito/tiny-typescript-transpiler"
 license = "MIT"
 readme = "README.md"
 
-# お好みで
 categories = ["compilers"]
 keywords = ["typescript", "transpiler", "compiler", "learning"]
 
